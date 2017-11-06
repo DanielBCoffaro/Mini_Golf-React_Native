@@ -65,14 +65,19 @@ export default class Main extends React.Component {
             this.setState({noteText: ''});
 
             AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray))
-            alert("Hitting here")
+            //alert("Hitting here")
         }
     }
 
     loadData = async() =>{
         try {
-            this.state = await AsyncStorage.getItem('noteArray');
-            alert("Load")
+            let savedData = await AsyncStorage.getItem('noteArray');
+            //this.state.noteArray = JSON.parse(savedData);
+            savedData = JSON.parse(savedData);
+            this.state.noteArray = savedData;
+            // alert("state " + this.state.noteArray)
+            // alert("saved data " +savedData)
+
         }catch (error){
             alert(error)
         }
@@ -81,6 +86,7 @@ export default class Main extends React.Component {
     deleteNote(key){
         this.state.noteArray.splice(key, 1);
         this.SetState({noteArray: this.state.noteArray})
+        AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray))
     }
 }
 
