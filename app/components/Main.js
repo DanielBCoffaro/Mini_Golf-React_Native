@@ -17,8 +17,7 @@ export default class Main extends React.Component {
     render() {
 
         let notes = this.state.noteArray.map((val, key) => {
-            return <Note key={key} keyval={key} val={val}
-                         deleteMethod={ ()=> this.deleteNote(key)}/>
+            return <Note key={key} keyval={key} val={val} deleteMethod={ ()=> this.deleteNote(key)}/>
         });
 
         return (
@@ -72,11 +71,9 @@ export default class Main extends React.Component {
     loadData = async() =>{
         try {
             let savedData = await AsyncStorage.getItem('noteArray');
-            //this.state.noteArray = JSON.parse(savedData);
             savedData = JSON.parse(savedData);
             this.state.noteArray = savedData;
-            // alert("state " + this.state.noteArray)
-            // alert("saved data " +savedData)
+            this.setState({})
 
         }catch (error){
             alert(error)
@@ -85,7 +82,7 @@ export default class Main extends React.Component {
 
     deleteNote(key){
         this.state.noteArray.splice(key, 1);
-        this.SetState({noteArray: this.state.noteArray})
+        this.setState({noteArray: this.state.noteArray})
         AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray))
     }
 }
