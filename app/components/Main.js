@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity, AsyncStorage } from 'react-native';
+import {StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity, AsyncStorage, Modal, TouchableHighlight } from 'react-native';
 import Note from './Note.js';
+import AddUserModel from './addUserModel.js';
 
 export default class Main extends React.Component {
 
@@ -9,6 +10,8 @@ export default class Main extends React.Component {
         this.state = {
             noteArray: [],
             noteText: '',
+            modalVisible: false,
+            playerName: '',
         }
         this.loadData();
     }
@@ -20,51 +23,55 @@ export default class Main extends React.Component {
             return <Note key={key} keyval={key} val={val} deleteMethod={ ()=> this.deleteNote(key)}/>
         });
 
+
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.headerText}>
-                        --The Notes--
+                        Mini Golf
                     </Text>
+                </View>
+                <View style={styles.advanceComponent}>
+
+                    <TouchableOpacity onPress={this.addNote.bind(this)} style={styles.leftButton}>
+                        <Text style={styles.addButtonText}>B</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.addNote.bind(this)} style={styles.rightButton}>
+                        <Text style={styles.addButtonText}>F</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <ScrollView style={styles.scrollContainer}>
                     {notes}
                 </ScrollView>
 
-                <View style={styles.footer}>
-                    <TextInput
-                        style={styles.textInput}
-                        onChangeText={(noteText) => this.setState({noteText})}
-                        value={this.state.noteText}
-                        placeholder='> note'
-                        placeholderTextColor='white'
-                        underlineColorAndroid='transparent'>
-                    </TextInput>
-                </View>
 
-                <TouchableOpacity onPress={this.addNote.bind(this)} style={styles.addButton}>
+                <TouchableOpacity onPress={() => {
+                    this.setModalVisible(true)
+                }} style={styles.addButton}>
                     <Text style={styles.addButtonText}>+</Text>
                 </TouchableOpacity>
+
+                <AddUserModel modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible.bind(this)} setModalVisible={this.addNote.bind(this) } />
 
             </View>
         );
     }
 
-    addNote(){
+    addNote(name){
         if (this.state.noteText) {
             var d = new Date();
             this.state.noteArray.push({
                 'date': d.getFullYear() +
                 "/" + (d.getMonth()) +
                 "/" + d.getDate(),
-                'note': this.state.noteText
+                'note': name
             });
             this.setState({noteArray: this.state.noteArray})
             this.setState({noteText: ''});
 
             AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray))
-            //alert("Hitting here")
+            this.props.setModalVisible(!this.props.modalVisible )
         }
     }
 
@@ -85,8 +92,13 @@ export default class Main extends React.Component {
         this.setState({noteArray: this.state.noteArray})
         AsyncStorage.setItem('noteArray', JSON.stringify(this.state.noteArray))
     }
-}
 
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+    }
+
+
+}
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -95,8 +107,37 @@ const styles = StyleSheet.create({
         backgroundColor: 'purple',
         alignItems: 'center',
         justifyContent: 'center',
+        borderBottomWidth: 0,
+        borderBottomColor: '#ddd',
+        height: 100,
+    },
+    advanceComponent:{
+        backgroundColor: 'purple',
+        alignItems: 'center',
+        justifyContent: 'center',
         borderBottomWidth: 10,
         borderBottomColor: '#ddd',
+        flexDirection: 'row',
+    },
+    leftButton:{
+        backgroundColor: 'blue',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 180,
+        height: 45,
+        borderColor: '#d6d7da',
+        borderRadius: 4,
+        borderWidth: 0.5,
+    },
+    rightButton:{
+        backgroundColor: 'green',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 180,
+        height: 45,
+        borderColor: '#d6d7da',
+        borderRadius: 4,
+        borderWidth: 0.5,
     },
     headerText:{
         color: 'white',
@@ -137,7 +178,7 @@ const styles = StyleSheet.create({
         elevation: 8,
     },
     addButtonText:{
-        backgroundColor: 'purple',
+        backgroundColor: 'transparent',
         fontSize: 30,
     },
 

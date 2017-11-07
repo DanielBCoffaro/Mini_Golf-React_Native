@@ -1,17 +1,23 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity,TextInput } from 'react-native';
 
 export default class Note extends React.Component {
     render() {
-        //alert("notes rendered")
         return (
             <View key={this.props.keyval} style={styles.note}>
                 <Text style={styles.noteText}>{this.props.val.date}</Text>
                 <Text style={styles.noteText}>{this.props.val.note}</Text>
 
-                <TouchableOpacity onPress={this.props.deleteMethod} style={styles.noteDelete}>
-                    <Text style={styles.noteDeleteText}>X</Text>
-                </TouchableOpacity>
+                <TextInput
+                    style={styles.noteDelete}
+                    //onChangeText={(noteText) => this.setState({noteText})}
+                    keyboardType = 'numeric'
+                    //value={this.state.noteText}
+                    //placeholder='> note'
+                    //placeholderTextColor='white'
+                    //underlineColorAndroid='transparent'
+                    >
+                </TextInput>
             </View>
 
 
