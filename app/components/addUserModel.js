@@ -1,7 +1,16 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity,TextInput,Modal,TouchableHighlight } from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity,TextInput,Modal,TouchableHighlight,FlatList, } from 'react-native';
+
 
 export default class AddUserModel extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            playerName: '',
+        }
+    }
+
     render() {
         return (
             <View>
@@ -23,20 +32,33 @@ export default class AddUserModel extends React.Component {
                             >
                             </TextInput>
 
-
+                            <TouchableOpacity onPress={() => {
+                                this.props.savePlayer(this.state.playerName)
+                            }} style={styles.addButton1}>
+                                <Text style={styles.addButtonText1}>Save Player</Text>
+                            </TouchableOpacity>
                             <TouchableOpacity onPress={() => {
                                 this.props.setModalVisible(!this.props.modalVisible )
                             }} style={styles.addButton1}>
-                                <Text style={styles.addButtonText1}>Save Player</Text>
+                                <Text style={styles.addButtonText1}>Close</Text>
                             </TouchableOpacity>
 
                         </View>
                     </View>
+
+                    <View style={{paddingTop:10,borderColor: 'black', borderRadius: 4, borderWidth: 0.5,height: 200,}}>
+                        <FlatList
+                            data={this.props.playerArray[0]}
+                            renderItem={
+                                ({item}) => <Text>{item}</Text>
+                            }
+                            extraData={this.props.playerArray[0]}
+                        >
+                        </FlatList>
+                    </View>
+
                 </Modal>
             </View>
-
-
-
 
         );
     }

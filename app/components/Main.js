@@ -8,21 +8,19 @@ export default class Main extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            noteArray: [],
-            noteText: '',
+            playerArray: [[],[]],
             modalVisible: false,
-            playerName: '',
         }
-        this.loadData();
+        //this.loadData();
     }
 
 
     render() {
 
-        let notes = this.state.noteArray.map((val, key) => {
-            return <Note key={key} keyval={key} val={val} deleteMethod={ ()=> this.deleteNote(key)}/>
-        });
 
+        let AddUserModels = (
+             <AddUserModel modalVisible={this.state.modalVisible} playerArray={this.state.playerArray} playerName={this.state.playerName} setModalVisible={this.setModalVisible.bind(this) } savePlayer={this.savePlayer.bind(this)} />
+        );
 
         return (
             <View style={styles.container}>
@@ -42,7 +40,6 @@ export default class Main extends React.Component {
                 </View>
 
                 <ScrollView style={styles.scrollContainer}>
-                    {notes}
                 </ScrollView>
 
 
@@ -52,7 +49,7 @@ export default class Main extends React.Component {
                     <Text style={styles.addButtonText}>+</Text>
                 </TouchableOpacity>
 
-                <AddUserModel modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible.bind(this)} setModalVisible={this.addNote.bind(this) } />
+                {AddUserModels}
 
             </View>
         );
@@ -77,9 +74,9 @@ export default class Main extends React.Component {
 
     loadData = async() =>{
         try {
-            let savedData = await AsyncStorage.getItem('noteArray');
+            let savedData = await AsyncStorage.getItem('playerArray');
             savedData = JSON.parse(savedData);
-            this.state.noteArray = savedData;
+            this.state.playerArray = savedData;
             this.setState({})
 
         }catch (error){
@@ -95,6 +92,16 @@ export default class Main extends React.Component {
 
     setModalVisible(visible) {
         this.setState({modalVisible: visible});
+    }
+    savePlayer(name) {
+        //alert(name)
+        //let testing = this.state.playerArray.slice()
+        let testing = Object.assign({}, this.state.playerArray);
+        testing[0].push(name)
+        this.setState({playerArray: testing})
+        AsyncStorage.setItem('playerArray', JSON.stringify(this.state.playerArray))
+
+
     }
 
 
